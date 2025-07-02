@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Event</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
+</head>
+<body>
+    <div class="container mx-auto mt-5 p-5">
+        <h2 class="text-3xl font-semibold text-center">Add Event</h2>
+        <br>
+        <form method="post" action="{% url 'create_event' %}" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="eventName" class="text-sm font-medium text-gray-700">Event Name:</label>
+                <input type="text" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="eventName" name="name" placeholder="Enter event name" required>
+            </div>
+            <div class="form-group">
+                <label for="eventCategory" class="text-sm font-medium text-gray-700">Category:</label>
+                <select class="form-control mt-1 block w-full border-gray-300 rounded-md" id="eventCategory" name="category" required>
+                    <option value="">Select category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="startDate" class="text-sm font-medium text-gray-700">Start Date:</label>
+                <input type="datetime-local" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="startDate" name="start_date" required>
+            </div>
+            <div class="form-group">
+                <label for="endDate" class="text-sm font-medium text-gray-700">End Date:</label>
+                <input type="datetime-local" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="endDate" name="end_date" required>
+            </div>
+            <div class="form-group">
+                <label for="priority" class="text-sm font-medium text-gray-700">Priority:</label>
+                <input type="number" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="priority" name="priority" min="1" value="1" required>
+            </div>
+            <div class="form-group">
+                <label for="description" class="text-sm font-medium text-gray-700">Description:</label>
+                <textarea class="form-control mt-1 block w-full border-gray-300 rounded-md" id="description" name="description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="location" class="text-sm font-medium text-gray-700">Location:</label>
+                <input type="text" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="location" name="location" placeholder="Enter event location">
+            </div>
+            <div class="form-group">
+                <label for="organizer" class="text-sm font-medium text-gray-700">Organizer:</label>
+                <input type="text" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="organizer" name="organizer" placeholder="Enter event organizer">
+            </div>
+            <button type="submit" class="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-700 w-full">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

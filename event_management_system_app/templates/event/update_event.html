@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Event</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" />
+  </head>
+  <body>
+    <div class="container mx-auto mt-5 p-5">
+      <h2 class="text-3xl font-semibold text-center">Update Event</h2>
+      <br>
+      <form method="post" id="updateEventForm">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name" class="text-sm font-medium text-gray-700">Name:</label>
+          <input type="text" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="name" name="name" value="{{ event.name }}" required />
+        </div>
+        <div class="form-group">
+          <label for="start_date" class="text-sm font-medium text-gray-700">Start Date:</label>
+          <input type="datetime-local" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="start_date" name="start_date" value="{{ event.start_date }}" required />
+        </div>
+        <div class="form-group">
+          <label for="end_date" class="text-sm font-medium text-gray-700">End Date:</label>
+          <input type="datetime-local" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="end_date" name="end_date" value="{{ event.end_date }}" required />
+          <small id="end_date_error" class="form-text text-red-500"></small>
+        </div>
+        <div class="form-group">
+          <label for="priority" class="text-sm font-medium text-gray-700">Priority:</label>
+          <input type="number" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="priority" name="priority" value="{{ event.priority }}" required />
+        </div>
+        <div class="form-group">
+          <label for="description" class="text-sm font-medium text-gray-700">Description:</label>
+          <textarea class="form-control mt-1 block w-full border-gray-300 rounded-md" id="description" name="description" required>{{ event.description }}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="location" class="text-sm font-medium text-gray-700">Location:</label>
+          <input type="text" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="location" name="location" value="{{ event.location }}" required />
+        </div>
+        <div class="form-group">
+          <label for="organizer" class="text-sm font-medium text-gray-700">Organizer:</label>
+          <input type="text" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="organizer" name="organizer" value="{{ event.organizer }}" required />
+        </div>
+        <button type="submit" class="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-700 w-full">Save Event</button>
+      </form>
+    </div>
+    <script>
+      function validateEndDate() {
+        var startDate = new Date(document.getElementById('start_date').value);
+        var endDate = new Date(document.getElementById('end_date').value);
+        if (endDate <= startDate) {
+          document.getElementById('end_date_error').innerText = 'End date must be after start date';
+          return false;
+        } else {
+          document.getElementById('end_date_error').innerText = '';
+          return true;
+        }
+      }
+
+      document.getElementById('updateEventForm').addEventListener('submit', function (event) {
+        if (!validateEndDate()) {
+          event.preventDefault();
+        }
+      });
+    </script>
+  </body>
+</html>

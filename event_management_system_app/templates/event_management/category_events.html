@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ category.name }} Events</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" />
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto mt-5 p-5">
+    <h2 class="text-3xl font-semibold text-center">{{ category.name }} Events</h2>
+    <br>
+    <div class="mb-3">
+      <a href="{% url 'create_event' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add New Event</a>
+      <a href="{% url 'category_list' %}" class="bg-gray-500 text-white px-4 py-2 rounded ml-2 hover:bg-gray-600">Back to Categories</a>
+    </div>
+    <table id="eventTable" class="min-w-full bg-white border border-gray-300">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="px-6 py-3 text-left">Name</th>
+          <th class="px-6 py-3 text-left">Start Date</th>
+          <th class="px-6 py-3 text-left">Time Left</th>
+          <th class="px-6 py-3 text-left">
+            Priority
+            <button class="text-blue-500" onclick="sortByPriority()">▲</button>
+          </th>
+          <th class="px-6 py-3 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-6 py-3">{{ event.name }}</td>
+            <td class="px-6 py-3">{{ event.start_date }}</td>
+            <td class="px-6 py-3">
+              <div id="countdown_{{ event.id }}" class="text-red-500"></div>
+            </td>
+            <td class="px-6 py-3">{{ event.priority }}</td>
+            <td class="px-6 py-3">
+              <a href="{% url 'update_event' event.id %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm">Update</a>
+              <form method="post" action="{% url 'delete_event' event.id %}" class="inline-block ml-2">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm">Delete</button>
+              </form>
+              <button type="button" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 text-sm" data-toggle="modal" data-target="#eventModal_{{ event.id }}">Details</button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% for event in events %}
+    <div class="modal fade" id="eventModal_{{ event.id }}" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel_{{ event.id }}" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-gray-200">
+            <h5 class="modal-title" id="eventModalLabel_{{ event.id }}">{{ event.name }}</h5>
+            <button type="button" class="text-black" data-dismiss="modal" aria-label="Close">×</button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Name:</strong> {{ event.name }}</p>
+            <p><strong>Category:</strong> {{ event.category.name }}</p>
+            <p><strong>Start Date:</strong> {{ event.start_date }}</p>
+            <p><strong>End Date:</strong> {{ event.end_date }}</p>
+            <p><strong>Priority:</strong> {{ event.priority }}</p>
+            <p><strong>Description:</strong> {{ event.description }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Organizer:</strong> {{ event.organizer }}</p>
+          </div>
+          <div class="modal-footer bg-gray-200">
+            <button type="button" class="bg-gray-500 text-white py-1 px-4 rounded" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <script>
+    function sortByPriority() {
+      var table, rows, switching, i, x, y, shouldSwitch;
+      table = document.getElementById("eventTable");
+      switching = true;
+      while (switching) {
+        switching = false;
+        rows = table.getElementsByTagName("tr");
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("td")[3];
+          y = rows[i + 1].getElementsByTagName("td")[3];
+          if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+            shouldSwitch = true;
+            break;
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+        }
+      }
+    }
+
+    function updateCountdownTimers() {
+      {% for event in events %}
+      var startDate = new Date('{{ event.start_date|date:"Y/m/d H:i:s" }}');
+      var now = new Date();
+      var timeDiff = startDate - now;
+
+      if (timeDiff > 0) {
+        var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        document.getElementById('countdown_{{ event.id }}').innerText = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+      } else {
+        document.getElementById('countdown_{{ event.id }}').innerText = "Event has started";
+      }
+      {% endfor %}
+    }
+
+    setInterval(updateCountdownTimers, 1000);
+  </script>
+</body>
+</html>

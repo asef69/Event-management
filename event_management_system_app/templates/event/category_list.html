@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" />
+  </head>
+  <body>
+    <div class="container mx-auto mt-5 p-5">
+      <div class="text-center mb-4">
+        <h2 class="text-3xl font-semibold">Categories</h2>
+      </div>
+      <a href="{% url 'create_category' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-3">Create Category</a>
+      <a href="{% url 'event_chart' %}" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 mb-3">View Event Chart</a>
+      <table class="min-w-full bg-white border border-gray-300">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="px-6 py-3 text-left">Name</th>
+            <th class="px-6 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for category in categories %}
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-6 py-3">
+                <a href="{% url 'category_events' category.id %}" class="text-blue-500 hover:underline">{{ category.name }}</a>
+              </td>
+              <td class="px-6 py-3">
+                <form method="post" action="{% url 'delete_category' category.id %}" style="display: inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
