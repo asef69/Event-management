@@ -73,15 +73,21 @@ WSGI_APPLICATION = 'event_management_system.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://event_management_2lxr_user:r05ElUVrRAYqWY0tJpqq8PoDPkjk11nD@dpg-d1im8fqli9vc73dcg5qg-a.oregon-postgres.render.com/event_management_2lxr',
-        conn_max_age=600
-    )
-}
+# Prefer SQLite locally; use DATABASE_URL if provided
+if os.getenv("DATABASE_URL"):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ["DATABASE_URL"],
+            conn_max_age=600
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -132,3 +138,14 @@ INTERNAL_IPS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Auth redirects
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# Email (use console backend for dev)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'no-reply@example.com'
+
+# Mapbox
+MAPBOX_TOKEN = os.getenv('MAPBOX_TOKEN', '')

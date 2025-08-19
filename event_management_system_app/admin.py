@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Event
+from .models import Category, Event, EventWishlist, EventAttendance
 
 
 @admin.register(Category)
@@ -12,3 +12,15 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'start_date', 'end_date', 'priority')
     list_filter = ('category', 'priority')
     search_fields = ('name', 'category__name', 'description', 'location', 'organizer')
+
+
+@admin.register(EventWishlist)
+class EventWishlistAdmin(admin.ModelAdmin):
+    list_display = ('user', 'event', 'created_at')
+    search_fields = ('user__username', 'event__name')
+
+
+@admin.register(EventAttendance)
+class EventAttendanceAdmin(admin.ModelAdmin):
+    list_display = ('user', 'event', 'joined_at')
+    search_fields = ('user__username', 'event__name')

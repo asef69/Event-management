@@ -10,9 +10,12 @@
   <div class="container mx-auto mt-5 p-5">
     <h2 class="text-3xl font-semibold text-center">{{ category.name }} Events</h2>
     <br>
-    <div class="mb-3">
+    <div class="mb-3 flex gap-2">
       <a href="{% url 'create_event' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add New Event</a>
-      <a href="{% url 'category_list' %}" class="bg-gray-500 text-white px-4 py-2 rounded ml-2 hover:bg-gray-600">Back to Categories</a>
+      <a href="{% url 'category_list' %}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Back to Categories</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'my_wishlist' %}" class="bg-indigo-600 text-white px-4 py-2 rounded">My Wishlist</a>
+      {% endif %}
     </div>
     <table id="eventTable" class="min-w-full bg-white border border-gray-300">
       <thead>

@@ -22,6 +22,8 @@
                     <option value="">Select category</option>
                     {% for category in categories %}
                         <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% empty %}
+                        <option disabled>No categories yet. Create one first.</option>
                     {% endfor %}
                 </select>
             </div>
@@ -44,6 +46,16 @@
             <div class="form-group">
                 <label for="location" class="text-sm font-medium text-gray-700">Location:</label>
                 <input type="text" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="location" name="location" placeholder="Enter event location">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label for="latitude" class="text-sm font-medium text-gray-700">Latitude:</label>
+                    <input type="number" step="0.000001" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="latitude" name="latitude" placeholder="e.g., 37.7749">
+                </div>
+                <div class="form-group">
+                    <label for="longitude" class="text-sm font-medium text-gray-700">Longitude:</label>
+                    <input type="number" step="0.000001" class="form-control mt-1 block w-full border-gray-300 rounded-md" id="longitude" name="longitude" placeholder="e.g., -122.4194">
+                </div>
             </div>
             <div class="form-group">
                 <label for="organizer" class="text-sm font-medium text-gray-700">Organizer:</label>
